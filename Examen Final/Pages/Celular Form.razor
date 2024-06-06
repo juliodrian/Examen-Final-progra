@@ -43,6 +43,7 @@
                 <ValidationMessage For="() => Smarthphone1.Modelo"/>
             </div>
         </div>
+        <p role="status">Current count: @contador</p>
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
@@ -72,6 +73,7 @@
                     <td>@Smarthphone3.Modelo</td>
 
                     <td>
+
                         <button class="btn btn-warning"
                                 @onclick="@(() => NavigationManager.NavigateTo($"/Smarthphone-Editar/{Smarthphone3.Sistema_Operativo}"))">
                             Editar
@@ -87,11 +89,14 @@
 @code {
     private Smarthphone Smarthphone1 = new Smarthphone();
     List<Smarthphone> Smarthphone2 = new List<Smarthphone>();
+    int contador = 0;
 
     protected async Task Guardar()
     {
         Smarthphone2.Add(Smarthphone1);
         await localStorage.SetItemAsync("Smarthphone2", Smarthphone2);
+        contador = Smarthphone2.Count;
+
     }
     protected async Task Borrar(string Sistema_Operativo)
     {

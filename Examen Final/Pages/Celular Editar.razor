@@ -1,5 +1,70 @@
-﻿<h3>Celular_Editar</h3>
+﻿@page "/SmarthPhone-Editar/{Sistema_Operativo}"
+@inject HttpClient Http
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager NavigationManager
+<h3>Celular_Editar</h3>
+<EditForm Model="@Smarthphone1" OnValidSubmit="@Guardar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="container">
+        <div class="row">
+            <div class="col-2">
+                <label for="Sistema_Operativo">Sistema Operativo del Smarthphone</label>
+                <InputText id="Sistema_Operativo" @bind-Value="Smarthphone1.Sistema_Operativo" class="form-control" />
+                <ValidationMessage For="() => Smarthphone1.Sistema_Operativo" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label for="Numero_De_Camaras">Numero de Camaras del Smarthphone</label>
+                <InputNumber id="Numero_De_Camaras" @bind-Value="Smarthphone1.Numero_De_Camaras" class="form-control" />
+                <ValidationMessage For="() => Smarthphone1.Numero_De_Camaras" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label for="Numero_De_Serie">Numero de Serie del Smarthphone</label>
+                <InputNumber id="Numero_De_Serie" @bind-Value="Smarthphone1.Numero_De_Serie" class="form-control" />
+                <ValidationMessage For="() => Smarthphone1.Numero_De_Serie" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label for="Marca">Marca del Smarthphone</label>
+                <InputText id="Marca" @bind-Value="Smarthphone1.Marca" class="form-control" />
+                <ValidationMessage For="() => Smarthphone1.Marca" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label for="Modelo">Modelo del Smarthphone</label>
+                <InputNumber id="Marca" @bind-Value="Smarthphone1.Modelo" class="form-control" />
+                <ValidationMessage For="() => Smarthphone1.Modelo" />
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+
+    </div>
+</EditForm>
 
 @code {
+    [Parameter]
+    public string Sistema_Operativo { get; set;}
+    private Smarthphone Smarthphone1 = new Smarthphone();
+    List<Smarthphone> Smarthphone2 = new List<Smarthphone>();
+    protected async Task Guardar()
+    {
+        Smarthphone2.Add(Smarthphone1);
 
+        await localStorage.SetItemAsync("Smarthphone2", Smarthphone2);
+        NavigationManager.NavigateTo("/SmarthPhone-Editar");
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        Smarthphone2 = await localStorage.GetItemAsync<List<Smarthphone>>("Smarthphone2");
+        Smarthphone1 = Smarthphone2.FirstOrDefault(c => c.Sistema_Operativo == Sistema_Operativo);
+    }
 }
+
