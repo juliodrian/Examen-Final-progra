@@ -1,0 +1,111 @@
+﻿@page "/Smarthphone"
+@inject HttpClient Http
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager NavigationManager
+<h3>Celular_Form</h3>
+
+<EditForm Model="@Smarthphone1" OnValidSubmit="@Guardar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="container">
+        <div class="row">
+            <div class="col-2">
+                <label for="Sistema_Operativo">Sistema Operativo del Smarthphone</label>
+                <InputText id="Sistema_Operativo" @bind-Value="Smarthphone1.Sistema_Operativo" class="form-control" />
+                <ValidationMessage For="() => Smarthphone1.Sistema_Operativo"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label for="Numero_De_Camaras">Numero de Camaras del Smarthphone</label>
+                <InputNumber id="Numero_De_Camaras" @bind-Value="Smarthphone1.Numero_De_Camaras" class="form-control" />
+                <ValidationMessage For="() => Smarthphone1.Numero_De_Camaras" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label for="Numero_De_Serie">Numero de Serie del Smarthphone</label>
+                <InputNumber id="Numero_De_Serie" @bind-Value="Smarthphone1.Numero_De_Serie" class="form-control" />
+                <ValidationMessage For="() => Smarthphone1.Numero_De_Serie" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label for="Marca">Marca del Smarthphone</label>
+                <InputText id="Marca" @bind-Value="Smarthphone1.Marca" class="form-control" />
+                <ValidationMessage For="() => Smarthphone1.Marca" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label for="Modelo">Modelo del Smarthphone</label>
+                <InputNumber id="Marca" @bind-Value="Smarthphone1.Modelo" class="form-control" />
+                <ValidationMessage For="() => Smarthphone1.Modelo"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+
+    </div>
+</EditForm>
+@if (Smarthphone2 != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th Sistema_Operativo></th>
+                <th Numero_De_Camaras></th>
+                <th Numero_De_Serie></th>
+                <th Marca></th>
+                <th Modelo></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var Smarthphone3 in Smarthphone2)
+            {
+                <tr>
+                    <td>@Smarthphone3.Sistema_Operativo</td>
+                    <td>@Smarthphone3.Numero_De_Camaras</td>
+                    <td>@Smarthphone3.Numero_De_Serie</td>
+                    <td>@Smarthphone3.Marca</td>
+                    <td>@Smarthphone3.Modelo</td>
+
+                    <td>
+                        <button class="btn btn-warning"
+                                @onclick="@(() => NavigationManager.NavigateTo($"/Smarthphone-Editar/{Smarthphone3.Sistema_Operativo}"))">
+                            Editar
+                        </button>
+                    </td>
+                    <td><button class="btn btn-danger" @onclick="@(() => Borrar(Smarthphone3.Sistema_Operativo))">Eliminar</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Smarthphone Smarthphone1 = new Smarthphone();
+    List<Smarthphone> Smarthphone2 = new List<Smarthphone>();
+
+    protected async Task Guardar()
+    {
+        Smarthphone2.Add(Smarthphone1);
+        await localStorage.SetItemAsync("Smarthphone2", Smarthphone2);
+    }
+    protected async Task Borrar(string Sistema_Operativo)
+    {
+        Smarthphone borrarSmarthphone = Smarthphone2.Find(c => c.Sistema_Operativo == Sistema_Operativo);
+        Smarthphone2.Remove(borrarSmarthphone);
+        await localStorage.SetItemAsync("Smarthphone2", Smarthphone2);
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        //Smarthphone2 = await localStorage.GetItemAsync<List<Smarthphone>>("Smarthphone2");
+    }
+    protected async Task BorrarSistema(string Sistema_Operativo)
+    {
+        Smarthphone2.Remove(Smarthphone2.First(c => c.Sistema_Operativo == Sistema_Operativo));
+        await localStorage.SetItemAsync("Smarthphone2", Smarthphone2);
+    }
+}
